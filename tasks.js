@@ -15,6 +15,7 @@ const {
     renameSync,
     unlinkSync,
     copyFileSync,
+    statSync,
 } = require('node:fs');
 const { join } = require('node:path');
 const { execSync } = require('node:child_process');
@@ -27,10 +28,7 @@ function adminClean() {
 }
 
 function adminCopy() {
-    copyFiles(
-        ['src-admin/build/assets/*.css', '!src-admin/build/assets/src_bootstrap_*.css'],
-        'admin/custom/assets',
-    );
+    copyFiles(['src-admin/build/assets/*.css', '!src-admin/build/assets/src_bootstrap_*.css'], 'admin/custom/assets');
     copyFiles(['src-admin/build/assets/*.js'], 'admin/custom/assets');
     copyFiles(['src-admin/build/assets/*.map'], 'admin/custom/assets');
     copyFiles(['src-admin/build/customComponents.js'], 'admin/custom');
@@ -39,7 +37,13 @@ function adminCopy() {
 }
 
 function clean() {
-    deleteFoldersRecursive(`${__dirname}/admin`, ['jsonConfig.json', 'javascript.png', 'javascript.svg', 'vsFont']);
+    deleteFoldersRecursive(`${__dirname}/admin`, [
+        'jsonConfig.json',
+        'javascript.png',
+        'javascript.svg',
+        'vsFont',
+        'i18n',
+    ]);
     deleteFoldersRecursive(`${__dirname}/src-editor/build`);
 }
 
@@ -58,9 +62,27 @@ function copyAllFiles() {
                 if (fileName.includes('.tgz')) {
                     return null;
                 }
+                if (
+                    fileName.includes('translations.json') ||
+                    fileName.includes('flat.txt') ||
+                    fileName.endsWith('/de')
+                ) {
+                    return null;
+                }
             },
         },
     );
+
+    // delete all folders in admin/i18n
+    const i18nDir = `${__dirname}/admin/i18n`;
+    if (existsSync(i18nDir)) {
+        const dirs = readdirSync(i18nDir);
+        for (const dir of dirs) {
+            if (statSync(`${i18nDir}/${dir}`).isDirectory()) {
+                rmdirSync(`${i18nDir}/${dir}`, { recursive: true });
+            }
+        }
+    }
 
     let index = readFileSync(`${__dirname}/src-editor/build/index.html`).toString();
     index = index.replace('href="/', 'href="');
