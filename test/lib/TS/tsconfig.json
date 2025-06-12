@@ -3,7 +3,7 @@
 */
 
 {
-    "files": ["../../../lib/javascript.d.ts", "./testDeclarations.ts"],
+    "files": ["../../../src/lib/javascript.d.ts", "./testDeclarations.ts"],
     "compilerOptions": {
         "allowJs": true,
         "checkJs": true,
@@ -11,6 +11,7 @@
         "target": "es6",
         "moduleResolution": "node",
         "skipLibCheck": true,
-        "strict": true
+        "strict": true,
+        "types": ["@types/node", "@iobroker/types"]
     }
 }
