@@ -789,14 +789,13 @@ class JavaScript extends Adapter {
         this.config.maxSetStatePerMinute = parseInt(this.config.maxSetStatePerMinute as unknown as string, 10) || 1000;
         this.config.maxTriggersPerScript = parseInt(this.config.maxTriggersPerScript as unknown as string, 10) || 100;
 
-        if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+        if (this.supportsFeature?.('PLUGINS')) {
             const sentryInstance: InstanceType<typeof SentryPlugin> = this.getPluginInstance('sentry') as InstanceType<
                 typeof SentryPlugin
             >;
             if (sentryInstance) {
                 const Sentry = sentryInstance.getSentryObject();
-                if (Sentry) {
-                    const scope = Sentry.getCurrentScope();
+                Sentry?.withScope(scope => {
                     scope.addEventProcessor((event, _hint) => {
                         if (event.exception?.values?.[0]) {
                             const eventData = event.exception.values[0];
@@ -813,13 +812,12 @@ class JavaScript extends Adapter {
                                 ) {
                                     return null;
                                 }
-                                //Exclude event if own directory is included but not inside own node_modules
+                                // Exclude event if own directory is included but not inside own node_modules
                                 const ownNodeModulesDir = join(__dirname, 'node_modules');
                                 if (
                                     !eventData.stacktrace.frames.find(
                                         frame =>
-                                            frame.filename &&
-                                            frame.filename.includes(__dirname) &&
+                                            frame.filename?.includes(__dirname) &&
                                             !frame.filename.includes(ownNodeModulesDir),
                                     )
                                 ) {
@@ -833,7 +831,7 @@ class JavaScript extends Adapter {
                         // No exception in it ... do not report
                         return null;
                     });
-                }
+                });
             }
         }
 
