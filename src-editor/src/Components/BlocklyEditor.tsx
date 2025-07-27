@@ -481,13 +481,7 @@ class BlocklyEditor extends React.Component<BlocklyEditorProps, BlocklyEditorSta
                 window.scripts.loading = true;
 
                 const xmlBlocks = BlocklyEditor.Blockly.utils.xml.textToDom(xml);
-                if (xmlBlocks.nodeName === 'xml') {
-                    for (let b = 0; b < xmlBlocks.children.length; b++) {
-                        BlocklyEditor.Blockly.Xml.appendDomToWorkspace(xmlBlocks, this.blocklyWorkspace);
-                    }
-                } else {
-                    BlocklyEditor.Blockly.Xml.appendDomToWorkspace(xmlBlocks, this.blocklyWorkspace);
-                }
+                BlocklyEditor.Blockly.Xml.appendDomToWorkspace(xmlBlocks, this.blocklyWorkspace);
 
                 window.scripts.loading = false;
 
@@ -612,7 +606,7 @@ class BlocklyEditor extends React.Component<BlocklyEditorProps, BlocklyEditorSta
         });
         this.loadCode();
         this.onResize();
-        // Move toolbar to the valid position
+        // Move the toolbar to the valid position
         const toolbar = document.getElementsByClassName('blocklyToolboxDiv')[0];
         this.blockly.appendChild(toolbar);
 
@@ -759,6 +753,7 @@ class BlocklyEditor extends React.Component<BlocklyEditorProps, BlocklyEditorSta
                     <TextField
                         variant="standard"
                         fullWidth
+                        autoFocus
                         value={this.state.showInputPrompt.value}
                         onKeyUp={e => {
                             if (e.key === 'Enter') {
