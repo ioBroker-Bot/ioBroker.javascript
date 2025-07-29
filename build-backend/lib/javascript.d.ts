@@ -844,7 +844,7 @@ declare global {
             min?: number;
             /** maximum value */
             max?: number;
-            /** allowed interval for numeric values */
+            /** the allowed interval for numeric values */
             step?: number;
             /** unit of the value */
             unit?: string;
@@ -1583,6 +1583,10 @@ declare global {
             type: 'state';
             common: StateCommon;
             acl?: StateACL;
+            /** The IDs of enums this state is assigned to. For example ["enum.functions.Licht","enum.rooms.Garten"] */
+            enumIds?: string[];
+            /** The names of enums this state is assigned to. For example ["Licht","Garten"] */
+            enumNames?: Array<iobJS.StringOrTranslated>;
         }
 
         interface PartialStateObject extends Partial<Omit<StateObject, 'common' | 'acl'>> {
@@ -1663,7 +1667,7 @@ declare global {
             version: string;
             /** Array of blocked versions, each entry represents a semver range */
             blockedVersions: string[];
-            /** If true the unsafe perm flag is needed on install */
+            /** If true, the unsafe perm flag is needed on install */
             unsafePerm?: boolean;
             /** If given, the packet name differs from the adapter name, e.g. because it is a scoped package */
             packetName?: string;
@@ -1975,6 +1979,7 @@ declare global {
 
         interface TypedState<T extends iobJS.StateValue = any> extends iobJS.State {
             val: T;
+            notExist?: true;
         }
 
         interface AbsentState extends Omit<iobJS.State, 'ack' | 'from' | 'ts' | 'lc'> {
@@ -2234,7 +2239,7 @@ declare global {
              * Otherwise, you need to provide a callback.
              */
             getState<T extends iobJS.StateValue = any>(callback: GetStateCallback<T>): void;
-            getState<T extends iobJS.StateValue = any>(): TypedState<T> | null | undefined;
+            getState<T extends iobJS.StateValue = any>(): TypedState<T> | iobJS.AbsentState | null | undefined;
             getStateAsync<T extends iobJS.StateValue = any>(): Promise<
                 TypedState<T> | iobJS.AbsentState | null | undefined
             >;
