@@ -1,44 +1,46 @@
+# Dependabot will run on day 28 of each month at 03:18 (Europe/Berlin timezone)
 version: 2
 updates:
-    - package-ecosystem: github-actions
-      directory: '/'
-      schedule:
-          interval: monthly
-          time: '04:00'
-          timezone: Europe/Berlin
 
-    - package-ecosystem: npm
-      directory: '/'
-      schedule:
-          interval: monthly
-          time: '04:00'
-          timezone: Europe/Berlin
-      open-pull-requests-limit: 5
-      versioning-strategy: increase
-      ignore:
-          # TypeScript should not be updated automatically, except patch updates
-          # it does not follow semver and minor updates are usually breaking
-          - dependency-name: 'typescript'
-            update-types: ['version-update:semver-minor', 'version-update:semver-major']
-          # @types/node should always match the minimum major version we support,
-          # so only apply patch and minor updates automatically
-          - dependency-name: '@types/node'
-            update-types: ['version-update:semver-major']
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "cron"
+      timezone: "Europe/Berlin"
+      cronjob: "18 3 28 * *"
+    open-pull-requests-limit: 15
 
-    - package-ecosystem: npm
-      directory: '/src-editor'
-      schedule:
-          interval: monthly
-          time: '04:00'
-          timezone: Europe/Berlin
-      open-pull-requests-limit: 5
-      versioning-strategy: increase
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "cron"
+      timezone: "Europe/Berlin"
+      cronjob: "18 3 28 * *"
+    open-pull-requests-limit: 15
+    versioning-strategy: "increase"
+    ignore:
+      - dependency-name: "typescript"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-major"
+      - dependency-name: "@types/node"
+        update-types:
+          - "version-update:semver-major"
 
-    - package-ecosystem: npm
-      directory: '/src-admin'
-      schedule:
-          interval: monthly
-          time: '04:00'
-          timezone: Europe/Berlin
-      open-pull-requests-limit: 5
-      versioning-strategy: increase
+  - package-ecosystem: "npm"
+    directory: "/src-editor"
+    schedule:
+      interval: "cron"
+      timezone: "Europe/Berlin"
+      cronjob: "18 3 28 * *"
+    open-pull-requests-limit: 15
+    versioning-strategy: "increase"
+
+  - package-ecosystem: "npm"
+    directory: "/src-admin"
+    schedule:
+      interval: "cron"
+      timezone: "Europe/Berlin"
+      cronjob: "18 3 28 * *"
+    open-pull-requests-limit: 15
+    versioning-strategy: "increase"
